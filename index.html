@@ -22,19 +22,14 @@ function show(id,b){var ss=document.querySelectorAll('section');for(var i=0;i<ss
 document.addEventListener('DOMContentLoaded',applyF);
 (function(){var nav=document.querySelector('nav');if(!nav)return;var tabs=[].slice.call(nav.querySelectorAll('button'));function sync(){var any=false;tabs.forEach(function(b){var on=b.classList.contains('active');b.setAttribute('role','tab');b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1;if(on)any=true;});if(!any&&tabs[0])tabs[0].tabIndex=0;}nav.setAttribute('role','tablist');sync();nav.addEventListener('click',sync);nav.addEventListener('keydown',function(e){var i=tabs.indexOf(document.activeElement);if(i<0)return;var n;if(e.key==='ArrowRight'||e.key==='ArrowDown')n=(i+1)%tabs.length;else if(e.key==='ArrowLeft'||e.key==='ArrowUp')n=(i-1+tabs.length)%tabs.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=tabs.length-1;else return;e.preventDefault();tabs[n].focus();tabs[n].click();sync();});})();
 document.addEventListener('keydown',function(e){var t=e.target||{};var tn=(t.tagName||'').toLowerCase();if(tn==='input'||tn==='select'||tn==='textarea')return;var nav=document.querySelector('nav');if(nav&&nav.contains(document.activeElement))return;if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;var nb=[].slice.call(document.querySelectorAll('nav button'));var i=-1;for(var k=0;k<nb.length;k++){if(nb[k].classList.contains('active')){i=k;break;}}if(i<0)i=0;var n=e.key==='ArrowRight'?(i+1)%nb.length:(i-1+nb.length)%nb.length;nb[n].click();nb[n].focus();e.preventDefault();});
-</script><style id='wc-extras-css'>img.fl{vertical-align:-2px;border-radius:2px;box-shadow:0 0 1px rgba(0,0,0,.35)}#todaybar{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:10px;margin:14px 2px 0;padding:10px 12px;font-size:13px}#todaybar .tb-title{font-weight:800;color:var(--navy);margin-bottom:6px;font-size:13px}#todaybar .tb-m{display:flex;gap:8px;align-items:center;padding:3px 0;flex-wrap:wrap}#todaybar .tb-time{font-weight:800;min-width:44px}#todaybar .tb-match{font-weight:700}#todaybar .tb-cd{color:#B26A00;font-weight:700;margin-left:auto;font-size:12px}#todaybar .tb-cd.live{color:#C62828}</style><script id='wc-extras'>
+</script><style id='wc-extras-css'>#todaybar{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:10px;margin:14px 2px 0;padding:10px 12px;font-size:13px}#todaybar .tb-title{font-weight:800;color:var(--navy);margin-bottom:6px;font-size:13px}#todaybar .tb-m{display:flex;gap:8px;align-items:center;padding:3px 0;flex-wrap:wrap}#todaybar .tb-time{font-weight:800;min-width:44px}#todaybar .tb-match{font-weight:700}#todaybar .tb-cd{color:#B26A00;font-weight:700;margin-left:auto;font-size:12px}#todaybar .tb-cd.live{color:#C62828}</style><script id='wc-extras'>
 (function(){
-var FLAGS={"Mexico": "mx", "South Africa": "za", "South Korea": "kr", "Czech Republic": "cz", "Canada": "ca", "Bosnia & Herzegovina": "ba", "Qatar": "qa", "Switzerland": "ch", "Brazil": "br", "Morocco": "ma", "Haiti": "ht", "Scotland": "gb-sct", "USA": "us", "Paraguay": "py", "Australia": "au", "Turkey": "tr", "Germany": "de", "Curacao": "cw", "Ivory Coast": "ci", "Ecuador": "ec", "Netherlands": "nl", "Japan": "jp", "Sweden": "se", "Tunisia": "tn", "Belgium": "be", "Egypt": "eg", "Iran": "ir", "New Zealand": "nz", "Spain": "es", "Cape Verde": "cv", "Saudi Arabia": "sa", "Uruguay": "uy", "France": "fr", "Senegal": "sn", "Iraq": "iq", "Norway": "no", "Argentina": "ar", "Algeria": "dz", "Austria": "at", "Jordan": "jo", "Portugal": "pt", "DR Congo": "cd", "Uzbekistan": "uz", "Colombia": "co", "England": "gb-eng", "Croatia": "hr", "Ghana": "gh", "Panama": "pa"};
 function esc2(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function flagImg(n){var c=FLAGS[n];if(!c)return'';return "<img class='fl' src='https://flagcdn.com/20x15/"+c+".png' srcset='https://flagcdn.com/40x30/"+c+".png 2x' width='20' height='15' alt='' loading='lazy'>";}
-function nmHtml(n){var f=flagImg(n);return f?f+' '+esc2(n):esc2(n);}
-function dec(el){var t=(el.textContent||'').trim();if(el.getAttribute('data-fl')==='1')return;if(FLAGS[t]){el.setAttribute('data-fl','1');el.innerHTML=nmHtml(t);}}
-function decMatch(el){if(el.getAttribute('data-fl')==='1')return;var parts=el.textContent.split(' vs ');if(parts.length!==2)return;var a=parts[0].trim(),b=parts[1].trim();if(!FLAGS[a]&&!FLAGS[b])return;el.setAttribute('data-fl','1');el.innerHTML=nmHtml(a)+' vs '+nmHtml(b);}
-function decorate(){var i,els;els=document.querySelectorAll('table.st td.l, table.grid th, .ko-team');for(i=0;i<els.length;i++)dec(els[i]);els=document.querySelectorAll('#schedTable td.match');for(i=0;i<els.length;i++)decMatch(els[i]);}
 function todayIL2(){try{return new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Jerusalem'});}catch(e){return new Date().toISOString().slice(0,10);}}
 function fmtCd(ms){var m=Math.round(ms/60000);var h=Math.floor(m/60);m=m%60;return h>0?('in '+h+'h '+m+'m'):('in '+m+'m');}
+function koTeams(num){if(!num)return null;var metas=document.querySelectorAll('.ko-card .ko-meta');for(var i=0;i<metas.length;i++){if(metas[i].textContent.trim().indexOf('#'+num+' ')===0){var ts=metas[i].parentNode.querySelectorAll('.ko-team');if(ts.length===2){var a=ts[0].textContent.trim(),b=ts[1].textContent.trim();if(a&&b&&a!=='TBD'&&b!=='TBD')return a+' vs '+b;}}}return null;}
+function fixSchedule(){var rows=document.querySelectorAll('#schedTable tbody tr.srow');for(var i=0;i<rows.length;i++){var r=rows[i],tds=r.querySelectorAll('td');var num=parseInt(tds[0]?tds[0].textContent:'',10);if(!num||num<73)continue;var mc=r.querySelector('td.match');if(!mc||mc.getAttribute('data-ko')==='1')continue;var kt=koTeams(num);if(kt){mc.setAttribute('data-ko','1');mc.textContent=kt;}}}
 function rowsData(){var rows=document.querySelectorAll('#schedTable tbody tr.srow');var out=[];for(var i=0;i<rows.length;i++){var r=rows[i],tds=r.querySelectorAll('td');out.push({num:tds[0]?tds[0].textContent.trim():'',date:r.getAttribute('data-date'),dt:r.getAttribute('data-dt'),time:tds[3]?tds[3].textContent.trim():'',stage:tds[4]?tds[4].textContent.trim():'',match:tds[5]?tds[5].textContent.trim():''});}return out;}
-function koTeams(num){if(!num)return null;var metas=document.querySelectorAll('.ko-card .ko-meta');for(var i=0;i<metas.length;i++){if(metas[i].textContent.trim().indexOf('#'+num+' ')===0){var ts=metas[i].parentNode.querySelectorAll('.ko-team');if(ts.length===2){var a=ts[0].textContent.trim(),b=ts[1].textContent.trim();if(a&&b&&a!=='TBD'&&b!=='TBD')return [a,b];}}}return null;}
 function buildStrip(){
  var wrap=document.querySelector('.wrap');if(!wrap)return;
  var data=rowsData();if(!data.length)return;
@@ -47,16 +42,13 @@ function buildStrip(){
  var h="<div class='tb-title'>"+title+"</div>";
  for(i=0;i<list.length;i++){var d=list[i],t=d.dt?new Date(d.dt).getTime():0,cd='';
   if(t){if(now>=t&&now<t+125*60000)cd="<span class='tb-cd live'>\u25CF LIVE</span>";else if(now<t)cd="<span class='tb-cd'>"+fmtCd(t-now)+"</span>";else cd="<span class='tb-cd'>finished</span>";}
-  var parts=d.match.split(' vs '),m=esc2(d.match);
-  if(parts.length===2){var a=parts[0].trim(),b=parts[1].trim();
-   if(!FLAGS[a]&&!FLAGS[b]){var kt=koTeams(d.num);if(kt){a=kt[0];b=kt[1];}}
-   m=nmHtml(a)+' vs '+nmHtml(b);}
-  h+="<div class='tb-m'><span class='tb-time'>"+esc2(d.time)+"</span><span class='tb-match'>"+m+"</span><span class='tag'>"+esc2(d.stage)+"</span>"+cd+"</div>";
+  var m=d.match;var kt=koTeams(d.num);if(kt)m=kt;
+  h+="<div class='tb-m'><span class='tb-time'>"+esc2(d.time)+"</span><span class='tb-match'>"+esc2(m)+"</span><span class='tag'>"+esc2(d.stage)+"</span>"+cd+"</div>";
  }
  if(!bar){bar=document.createElement('div');bar.id='todaybar';wrap.insertBefore(bar,wrap.firstChild);}
  bar.innerHTML=h;
 }
-function boot(){decorate();buildStrip();setInterval(buildStrip,60000);}
+function boot(){fixSchedule();buildStrip();setInterval(buildStrip,60000);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script></body></html>
